@@ -1,2 +1,2 @@
-# Face_Regcognition
+# Face_Recognition
 EE4208 project
