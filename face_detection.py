@@ -1,5 +1,5 @@
 import cv2
-import os
+# import os
 
 faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
@@ -25,6 +25,8 @@ while True:
 
     # Display the resulting frame
     cv2.imshow('Video', frames)
+
+    # Extract and visualise information from frame using (x, y, w, h)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
