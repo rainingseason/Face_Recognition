@@ -1,9 +1,8 @@
 import cv2
 import os
 
-cascPath = os.path.dirname(cv2.__file__) + \
-    "/data/haarcascade_frontalface_default.xml"
-faceCascade = cv2.CascadeClassifier(cascPath)
+
+faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
 video_capture = cv2.VideoCapture(0)
 
