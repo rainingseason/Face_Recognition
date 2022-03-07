@@ -2,7 +2,6 @@ import cv2
 # import os
 
 faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
-
 video_capture = cv2.VideoCapture(0)
 
 while True:
@@ -23,10 +22,14 @@ while True:
     for (x, y, w, h) in faces:
         cv2.rectangle(frames, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
+        # Extract and visualise information from frame using (x, y, w, h)
+        crop_img = frames[y:y + h, x:x + w]
+
     # Display the resulting frame
     cv2.imshow('Video', frames)
 
-    # Extract and visualise information from frame using (x, y, w, h)
+    # Display the cropped frame
+    # cv2.imshow("cropped", crop_img)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
