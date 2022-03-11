@@ -11,29 +11,29 @@ counter = 0
 
 print('Training...')
 # Create a list of images and a list of corresponding names
-(images, lables, names, id) = ([], [], {}, 0)
+(images, labels, names, id) = ([], [], {}, 0)
 for (subdirs, dirs, files) in os.walk(fn_dir):
     for subdir in dirs:
         names[id] = subdir
         subjectpath = os.path.join(fn_dir, subdir)
         for filename in os.listdir(subjectpath):
             path = subjectpath + '/' + filename
-            lable = id
+            label = id
             images.append(cv2.imread(path, 0))
-            lables.append(int(lable))
+            labels.append(int(label))
             counter += 1
         id += 1
 # (im_width, im_height) = (100, 100)
 
 # Create a Numpy array from the two lists above
-(images, lables) = [numpy.array(lis) for lis in [images, lables]]
+(images, labels) = [numpy.array(lis) for lis in [images, labels]]
 
 # OpenCV trains a model from the images
 model = cv2.face.EigenFaceRecognizer_create()
 # model = cv2.face.FisherFaceRecognizer_create() # not available now
 # model = cv2.face.LBPHFaceRecognizer_create() # percentage need to change
 
-model.train(images, lables)
+model.train(images, labels)
 
 print(str(counter) + ' images for training done!')
 #################### Training done !!!! #####################
@@ -89,11 +89,11 @@ while True:
             name = namelist[prediction[0]]  # retrieve name from the list based on the prediction index
             confidence_score = str(
                 round((100 - (prediction[1] / 200)), 1)) + '%'  # confidence score 0-20000; 0 means perfectly match;
-            final_lable = name + ' ' + confidence_score
+            final_label = name + ' ' + confidence_score
             thecolor = color[prediction[0]] if color[prediction[0]] else (255, 255, 255)
 
             rec = cv2.rectangle(frames, (x, y), (x + w, y + h), thecolor, 2)
-            cv2.putText(rec, final_lable, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, thecolor, 2)
+            cv2.putText(rec, final_label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, thecolor, 2)
         except:
             pass
     # Display the resulting frame
