@@ -41,14 +41,14 @@ print(str(counter) + ' images for training done!')
 #################### Training done !!!! #####################
 
 #################### predefined dictionary !!!! #####################
-namelist = ['alyna', 'charles', 'Kailun', 'Kailun_mask', 'Truong']  # index 0 1 2...
+namelist = ['alyna', 'charles', 'Kailun', 'Truong']  # index 0 1 2...
 color = {
     0: (238, 238, 0),  # alyna cyan
     1: (255, 62, 191),  # charles purple
     2: (255, 255, 255),  # kailun white
-    3: (255, 0, 0),  # Mask Blue
-    4: (0, 255, 0),  # Truong Green
-    5: (0, 0, 255),  # TT red
+    3: (255, 0, 0),  # truong blue
+    4: (0, 255, 0),  # unused green
+    5: (0, 0, 255),  # unused red
 }
 
 # notes: (B,G,R)
