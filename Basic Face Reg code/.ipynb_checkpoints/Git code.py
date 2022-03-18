@@ -18,7 +18,7 @@ haarcascade_frontalface = 'C:/Users/phuct/PycharmProjects/Project/opencv_xml_fil
 def detect_face(input_img):
     image = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
     face_cascade = cv2.CascadeClassifier('C:/Users/phuct/PycharmProjects/Project/opencv_xml_files/haarcascade_frontalface.xml')
-    faces = face_cascade.detectMultiScale(image, scaleFactor=1.2, minNeighbors=5);
+    faces = face_cascade.detectMultiScale(image, scaleFactor=1.2, minNeighbors=5)
     if (len(faces) == 0):
         return -1, -1
     (x, y, w, h) = faces[0]
