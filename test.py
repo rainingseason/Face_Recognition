@@ -85,11 +85,11 @@ while True:
         resized = cv2.resize(gray[y:y+w, x:x+h], (200, 200), interpolation=cv2.INTER_AREA)
         # converted = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
         prediction = eigenfaces_recognizer.predict(resized)
-        confidence_score = prediction[1]  # confidence score 0-20000; 0 means perfectly match;
+        confidence_score = 100 - int(prediction[1]/200) # confidence score 0-20000; 0 means perfectly match;
         name = namelist[prediction[0]]  # retrieve name from the list based on the prediction index
-        final_label = name + ' ' + str(confidence_score)
+        final_label = name + ' ' + str(confidence_score) + '%'
         thecolor = color[prediction[0]] if color[prediction[0]] else (255, 255, 255)
-        if(confidence_score > 7000):
+        if(confidence_score < 65):
             final_label = 'Unknown'
             thecolor = (255, 255, 255)
         rec = cv2.rectangle(frames, (x, y), (x + w, y + h), thecolor, 2)
