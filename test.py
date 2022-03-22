@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-training_data_folder_path = '/Users/charlesbeh/Desktop/School/IS/Face_Recognition/Basic Face Reg code/dataset/training-data'
+training_data_folder_path = '/Users/charlesbeh/Desktop/School/IS/Database'
 test_data_folder_path = '/Users/charlesbeh/Desktop/School/IS/Face_Recognition/Basic Face Reg code/dataset/test-data'
 
 #Face Detection
@@ -34,13 +34,14 @@ def prepare_training_data(training_data_folder_path):
             image_path = training_image_path + "/" + image_name
             image = cv2.imread(image_path)
             face, rect = detect_face(image)
-            resized_face = cv2.resize(face, (121, 121), interpolation=cv2.INTER_AREA)
+            resized_face = cv2.resize(face, (200, 200), interpolation=cv2.INTER_AREA)
             detected_faces.append(resized_face)
             face_labels.append(label)
+            print(image_path)
 
     return detected_faces, face_labels
 
-detected_faces, face_labels = prepare_training_data('/Users/charlesbeh/Desktop/School/IS/Face_Recognition/Basic Face Reg code/dataset/training-data')
+detected_faces, face_labels = prepare_training_data('Database')
 print("Total faces: ", len(detected_faces))
 print("Total labels: ", len(face_labels))
 
@@ -50,84 +51,49 @@ eigenfaces_recognizer = cv2.face.EigenFaceRecognizer_create()
 #Train the face recognizer model
 eigenfaces_recognizer.train(detected_faces, np.array(face_labels))
 
-def draw_rectangle(test_image, rect):
-    (x, y, w, h) = rect
-    cv2.rectangle(test_image, (x, y), (x+w, y+h), (0, 255, 0), 2)
-
-def draw_text(test_image, label_text, x, y):
-    cv2.putText(test_image, label_text, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
-
-#Predict Output on test data
-def predict(test_image):
-    detected_face, rect = detect_face(test_image)
-    resized_test_image = cv2.resize(detected_face, (121,121), interpolation = cv2.INTER_AREA)
-    label= eigenfaces_recognizer.predict(resized_test_image)
-    label_text = tags[label[0]]
-    draw_rectangle(test_image, rect)
-    draw_text(test_image, label_text, rect[0], rect[1]-5)
-    return test_image, label_text
-
-tags = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-
-#Change the path of test image
-test_image = cv2.imread("/Users/charlesbeh/Pictures/Photo Booth Library/Pictures/1.jpg")
-
-predicted_image, label = predict(test_image)
-
-fig = plt.figure()
-ax1 = fig.add_axes((0.1, 0.2, 0.8, 0.7))
-ax1.set_title('actual class: ' + tags[2]+ ' | ' + 'predicted class: ' + label)
-plt.axis("off")
-plt.imshow(cv2.cvtColor(predicted_image, cv2.COLOR_BGR2RGB))
-plt.show()
 
 video_capture = cv2.VideoCapture(0)  # 0 means webcam
 # video_capture.set(3, 1920)  # width
 # video_capture.set(4, 1080)  # height
 
 face_cascade = cv2.CascadeClassifier('/Users/charlesbeh/Desktop/School/IS/Face_Recognition/Basic Face Reg code/opencv_xml_files/haarcascade_frontalface.xml')
-width = 121
-height = 121
+width = 200
+height = 200
 dim = (width, height)
 
-namelist = ['Alyna', 'Charles', 'Kailun', 'Truong']
+namelist = ['Adrian', 'Truong', 'Joel', 'JX', 'Michael']
 color = {
-    0: (238, 238, 0),  # alyna cyan
-    1: (255, 62, 191),  # charles purple
-    2: (255, 255, 255),  # kailun white
-    3: (255, 0, 0),  # truong blue
+    0: (238, 238, 0),  
+    1: (255, 62, 191), 
+    2: (255, 0, 0),  
+    3: (255, 0, 255),
+    4: (0,255,0)
 }
 
 while True:
     time.sleep(0.1)
     ret, frames = video_capture.read()
-
     gray = cv2.cvtColor(frames, cv2.COLOR_BGR2GRAY)
     # faces = faceCascade.detectMultiScale(gray, 1.3, 5)
     faces = face_cascade.detectMultiScale(
         gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30),
-        flags=cv2.CASCADE_SCALE_IMAGE
+        1.2,5
     )
-
     # Draw a rectangle around the faces
     for (x, y, w, h) in faces:
-        try:
-            # resize image and convert to grayscale
-            resized = cv2.resize(gray[x:x + w, y:y + h], dim)
-            # converted = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
-            prediction = eigenfaces_recognizer.predict(resized)
-            confidence_score = str(round((100 - (prediction[1] / 200)), 1)) + '%'  # confidence score 0-20000; 0 means perfectly match;
-            name = namelist[prediction[0]]  # retrieve name from the list based on the prediction index
-            final_label = name + ' ' + confidence_score
-            thecolor = color[prediction[0]] if color[prediction[0]] else (255, 255, 255)
-
-            rec = cv2.rectangle(frames, (x, y), (x + w, y + h), thecolor, 2)
-            cv2.putText(rec, final_label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, thecolor, 2)
-        except:
-            pass
+        # resize image and convert to grayscale
+        resized = cv2.resize(gray[y:y+w, x:x+h], (200, 200), interpolation=cv2.INTER_AREA)
+        # converted = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+        prediction = eigenfaces_recognizer.predict(resized)
+        confidence_score = prediction[1]  # confidence score 0-20000; 0 means perfectly match;
+        name = namelist[prediction[0]]  # retrieve name from the list based on the prediction index
+        final_label = name + ' ' + str(confidence_score)
+        thecolor = color[prediction[0]] if color[prediction[0]] else (255, 255, 255)
+        if(confidence_score > 7000):
+            final_label = 'Unknown'
+            thecolor = (255, 255, 255)
+        rec = cv2.rectangle(frames, (x, y), (x + w, y + h), thecolor, 2)
+        cv2.putText(rec, final_label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, thecolor, 2)    
     # Display the resulting frame
     cv2.imshow('Video', frames)
 
