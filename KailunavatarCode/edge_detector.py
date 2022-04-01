@@ -24,10 +24,16 @@ gray_img = cv2.imread('lady1.JPG', 0) # flag = 0 reads in grayscale
 dim1 = (3000, 3000)
 resized = cv2.resize(gray_img, dim1)
 
-result = convolve(gray_img, cf.gaussian_kernel())
+result = cf.convolve(gray_img, cf.gaussian_kernel())
 (result, theta) = cf.sobel_filters(result)
 result = cf.non_max_suppression(result, theta)
 # round_result = np.rint(result)
+
+# author's code
+img_smoothed = cf.convolve(img, cf.gaussian_kernel())
+gradientMat, thetaMat = cf.sobel_filters(img_smoothed)
+nonMaxImg = cf.non_max_suppression(gradientMat, thetaMat)
+cv2.imshow("Author", nonMaxImg)
 
 # plt.subplot(121)
 # plt.imshow(img)
