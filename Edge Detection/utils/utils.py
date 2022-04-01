@@ -12,7 +12,7 @@ def rgb2gray(rgb):
 
     return gray
 
-def load_data(dir_name = 'faces_imgs'):
+def load_data(dir_name = 'Face_Recognition/Edge Detection/faces_imgs'):
     '''
     Load images from the "faces_imgs" directory
     Images are in JPG and we convert it to gray scale images
