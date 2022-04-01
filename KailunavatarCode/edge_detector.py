@@ -24,16 +24,24 @@ gray_img = cv2.imread('lady1.JPG', 0) # flag = 0 reads in grayscale
 dim1 = (3000, 3000)
 resized = cv2.resize(gray_img, dim1)
 
-result = cf.convolve(gray_img, cf.gaussian_kernel())
+result = convolve(gray_img, cf.gaussian_kernel())
 (result, theta) = cf.sobel_filters(result)
 result = cf.non_max_suppression(result, theta)
+
+threshold = 0.95
+
+thresholded = result / result.max()
+low_values_flags = thresholded < threshold  # values are below threshold
+thresholded[low_values_flags] = 0  # All low values set to 0
+high_values_flags = thresholded > threshold
+thresholded[high_values_flags] = 1
+
 # round_result = np.rint(result)
 
 # author's code
-img_smoothed = cf.convolve(img, cf.gaussian_kernel())
-gradientMat, thetaMat = cf.sobel_filters(img_smoothed)
-nonMaxImg = cf.non_max_suppression(gradientMat, thetaMat)
-cv2.imshow("Author", nonMaxImg)
+# img_smoothed = cf.convolve(resized, cf.gaussian_kernel())
+# gradientMat, thetaMat = cf.sobel_filters(img_smoothed)
+# nonMaxImg = cf.non_max_suppression(gradientMat, thetaMat)
 
 # plt.subplot(121)
 # plt.imshow(img)
@@ -43,5 +51,6 @@ cv2.imshow("Author", nonMaxImg)
 # plt.show()
 
 cv2.imshow("Original", img)
-cv2.imshow("Result", round_result)
+cv2.imshow("Result", thresholded)
+# cv2.imshow("Author", nonMaxImg)
 cv2.waitKey(0)
