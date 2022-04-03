@@ -31,10 +31,11 @@ def prepare_training_data(training_data_folder_path):
             image_path = training_image_path + "/" + image_name
             image = cv2.imread(image_path)
             face, rect = detect_face(image)
-            resized_face = cv2.resize(face, (250, 300), interpolation=cv2.INTER_AREA)
-            detected_faces.append(resized_face)
-            face_labels.append(label)
-            print(image_path)
+            if face is not -1:
+                resized_face = cv2.resize(face, (250, 300), interpolation=cv2.INTER_AREA)
+                detected_faces.append(resized_face)
+                face_labels.append(label)
+                print(image_path)
 
     return detected_faces, face_labels
 
@@ -86,7 +87,7 @@ while True:
             name = namelist[prediction[0]]  # retrieve name from the list based on the prediction index
             final_label = name + ' ' + str(confidence_score) + '%'
             thecolor = color[prediction[0]] if color[prediction[0]] else (255, 255, 255)
-            if(confidence_score < 60):
+            if(confidence_score < 65):
                 final_label = 'Unknown'
                 thecolor = (255, 255, 255)
 
