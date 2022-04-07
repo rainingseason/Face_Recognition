@@ -10,7 +10,9 @@ def toFitMatplotlib(img):
 
 # pre-processing
 path = os.getcwd()
-path = path + '\\KailunavatarCode\\lady1.JPG'
+# path = path + '\\KailunavatarCode\\lady1.JPG'
+path = path + '\\Edge Detection\\faces_imgs\\Chess_board.jpeg'
+
 img = cv2.imread(path) # BGR
 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 

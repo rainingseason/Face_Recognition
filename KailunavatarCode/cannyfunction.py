@@ -2,11 +2,12 @@ import numpy as np
 from scipy import signal
 
 # gaussian smoothing
-def gaussian_kernel(size = 5, sigma = 1.3):
-    size = int(size) // 2 # floor division eg. 5 // 2 = 2.5 -> 2
+def gaussian_kernel(sigma = 1.3):
+    w = np.ceil(sigma * 5) // 2 * 2 + 1
+    size = int(w) // 2 # floor division eg. 5 // 2 = 2.5 -> 2
     x, y = np.mgrid[-size:size+1, -size:size+1]
     normal = 1 / (2.0 * np.pi * sigma**2)
-    g =  np.exp(-((x**2 + y**2) / (2.0*sigma**2)))*normal
+    g = np.exp(-((x**2 + y**2) / (2.0*sigma**2)))*normal
     return g
 
 def sobel_filters(img):
