@@ -12,6 +12,8 @@ def toFitMatplotlib(img):
 path = os.getcwd()
 # path = path + '\\KailunavatarCode\\lady1.JPG'
 path = path + '\\Edge Detection\\faces_imgs\\Chess_board.jpeg'
+# path = path + '\\Edge Detection\\faces_imgs\\Chessboard_Reference.png'
+# path = path + '\\Edge Detection\\faces_imgs\\sunset.jpg'
 
 img = cv2.imread(path) # BGR
 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -22,9 +24,11 @@ gaussian_smooth = signal.convolve2d(gray_img, cf.gaussian_kernel(), boundary='fi
 
 result = cf.non_max_suppression(result, theta)
 result, weak, strong = cf.threshold(result)
+result = cf.hysteresis(result, weak)
 
 plt.subplot(121)
-plt.imshow(gray_img, cmap='gray')
+# plt.imshow(gray_img, cmap='gray')
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 plt.title('Original Image')
 plt.xticks([]), plt.yticks([])
 
