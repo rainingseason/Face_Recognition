@@ -61,7 +61,8 @@ def non_max_suppression(img, D):
     return Z
 
 
-def threshold(img, lowThresholdRatio=0.05, highThresholdRatio=0.1):
+# def threshold(img, lowThresholdRatio=0.05, highThresholdRatio=0.1):
+def threshold(img, lowThresholdRatio=0.3, highThresholdRatio=0.6):
     highThreshold = img.max() * highThresholdRatio
     lowThreshold = highThreshold * lowThresholdRatio
 
