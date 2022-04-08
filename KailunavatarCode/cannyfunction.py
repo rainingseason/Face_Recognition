@@ -61,8 +61,8 @@ def non_max_suppression(img, D):
     return Z
 
 
-def threshold(img, lowThresholdRatio=0.05, highThresholdRatio=0.15):
-# def threshold(img, lowThresholdRatio=0.3, highThresholdRatio=0.6):
+# def threshold(img, lowThresholdRatio=0.05, highThresholdRatio=0.15):
+def threshold(img, lowThresholdRatio=0.15, highThresholdRatio=0.3):
     highThreshold = img.max() * highThresholdRatio
     lowThreshold = highThreshold * lowThresholdRatio
 
@@ -98,28 +98,28 @@ def hysteresis(img, weak, strong=255):
                     pass
     return img
 
-def coefficient(x,y):
-    # https://stackoverflow.com/questions/19175037/determine-a-b-c-of-quadratic-equation-using-data-points
-    x1 = x[0]
-    x2 = x[1]
-    x3 = x[2]
-    y1 = y[0]
-    y2 = y[1]
-    y3 = y[2]
-
-    a = ((y1 / ((x1 - x2) * (x1 - x3)))
-        + (y2 / ((x2 - x1) * (x2 - x3)))
-        + (y3 / ((x3 - x1) * (x3 - x2))))
-
-    b = (-y1 * (x2 + x3) / ((x1 - x2) * (x1 - x3))
-         -y2 * (x1 + x3) / ((x2 - x1) * (x2 - x3))
-         -y3 * (x1 + x2) / ((x3 - x1) * (x3 - x2)))
-
-    c = (y1 * x2 * x3 / ((x1 - x2) * (x1 - x3))
-        + y2 * x1 * x3 / ((x2 - x1) * (x2 - x3))
-        + y3 * x1 * x2 / ((x3 - x1) * (x3 - x2)))
-
-    return a, b, c
+# def coefficient(x,y):
+#     # https://stackoverflow.com/questions/19175037/determine-a-b-c-of-quadratic-equation-using-data-points
+#     x1 = x[0]
+#     x2 = x[1]
+#     x3 = x[2]
+#     y1 = y[0]
+#     y2 = y[1]
+#     y3 = y[2]
+#
+#     a = ((y1 / ((x1 - x2) * (x1 - x3)))
+#         + (y2 / ((x2 - x1) * (x2 - x3)))
+#         + (y3 / ((x3 - x1) * (x3 - x2))))
+#
+#     b = (-y1 * (x2 + x3) / ((x1 - x2) * (x1 - x3))
+#          -y2 * (x1 + x3) / ((x2 - x1) * (x2 - x3))
+#          -y3 * (x1 + x2) / ((x3 - x1) * (x3 - x2)))
+#
+#     c = (y1 * x2 * x3 / ((x1 - x2) * (x1 - x3))
+#         + y2 * x1 * x3 / ((x2 - x1) * (x2 - x3))
+#         + y3 * x1 * x2 / ((x3 - x1) * (x3 - x2)))
+#
+#     return a, b, c
 
 def find_true_edge(img):
     M, N = img.shape
