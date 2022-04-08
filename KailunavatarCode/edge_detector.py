@@ -1,56 +1,51 @@
 import cv2
-from scipy.ndimage import convolve
-import matplotlib.pyplot as plt
+from scipy import signal
+from matplotlib import pyplot as plt
 import KailunavatarCode.cannyfunction as cf
-import numpy as np
 import os
 
+def toFitMatplotlib(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    return img
+
+# pre-processing
 # path = os.getcwd()
-# os.chdir(path + "\\KailunavatarCode")
+path = 'C:\\Users\\Alyna Khoo Yi Jie\\Documents\\NTU\\Year 4\\Semester 2\\EE4208 INTELLIGENT SYSTEMS DESIGN\\Assignments\\Face Recognition'
+# path = path + '\\KailunavatarCode\\lady1.JPG'
+# path = path + '\\Edge Detection\\faces_imgs\\Chess_board.jpeg'
+path = path + '\\Edge Detection\\faces_imgs\\Chessboard.jpeg'
+# path = path + '\\Edge Detection\\faces_imgs\\Chessboard_Reference.png'
+# path = path + '\\Edge Detection\\faces_imgs\\sunset.jpg'
 
-img = cv2.imread('lady1.JPG')
-gray_img = cv2.imread('lady1.JPG', 0) # flag = 0 reads in grayscale
-# img = cv2.imread('lady1.JPG')
-# gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+# path = 'C:\\Users\\Alyna Khoo Yi Jie\\Documents\\NTU\\Year 4\\Semester 2\\EE4208 INTELLIGENT SYSTEMS DESIGN\\Assignments\\Face Recognition\\database\\alyna\\alyna_3.jpeg'
 
-# pre-defined function
-# edges = cv2.Canny(img,100,200)
-# plt.subplot(121),plt.imshow(img,cmap = 'gray')
-# plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-# plt.subplot(122),plt.imshow(edges,cmap = 'gray')
-# plt.title('Edge Image'), plt.xticks([]), plt.yticks([])
-# plt.show()
+img = cv2.imread(path) # BGR
+(dim_x, dim_y) = (img.shape[0], img.shape[1])
+(small_dim_x, small_dim_y) = (dim_x//4, dim_y//4)
+small_img = cv2.resize(img, (small_dim_x, small_dim_y))
+gray_img = cv2.cvtColor(small_img, cv2.COLOR_BGR2GRAY)
 
-dim1 = (3000, 3000)
-resized = cv2.resize(gray_img, dim1)
+gaussian_smooth = signal.convolve2d(gray_img, cf.gaussian_kernel(), boundary='fill', mode='same')
 
-result = convolve(gray_img, cf.gaussian_kernel())
-(result, theta) = cf.sobel_filters(result)
+(result, theta) = cf.sobel_filters(gaussian_smooth)
+
 result = cf.non_max_suppression(result, theta)
+result, weak, strong = cf.threshold(result)
+result = cf.hysteresis(result, weak)
 
-threshold = 0.95
+cv2.imwrite('small_result.jpg', result)
+result = cv2.imread('small_result.jpg')
+result = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
+result = cv2.resize(result, (dim_x, dim_y))
+result = cf.find_true_edge(result)
 
-thresholded = result / result.max()
-low_values_flags = thresholded < threshold  # values are below threshold
-thresholded[low_values_flags] = 0  # All low values set to 0
-high_values_flags = thresholded > threshold
-thresholded[high_values_flags] = 1
+plt.subplot(121)
+# plt.imshow(gray_img, cmap='gray')
+plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.title('Original Image')
+plt.xticks([]), plt.yticks([])
 
-# round_result = np.rint(result)
-
-# author's code
-# img_smoothed = cf.convolve(resized, cf.gaussian_kernel())
-# gradientMat, thetaMat = cf.sobel_filters(img_smoothed)
-# nonMaxImg = cf.non_max_suppression(gradientMat, thetaMat)
-
-# plt.subplot(121)
-# plt.imshow(img)
-# plt.title('Original Image'), plt.xticks([]), plt.yticks([])
-# plt.subplot(122),plt.imshow(result)
-# plt.title('Result Image'), plt.xticks([]), plt.yticks([])
-# plt.show()
-
-cv2.imshow("Original", img)
-cv2.imshow("Result", thresholded)
-# cv2.imshow("Author", nonMaxImg)
-cv2.waitKey(0)
+plt.subplot(122),plt.imshow(result, cmap='gray')
+plt.title('Result Image')
+plt.xticks([]), plt.yticks([])
+plt.show()
