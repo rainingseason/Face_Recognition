@@ -123,6 +123,7 @@ def coefficient(x,y):
 
 def find_true_edge(img):
     M, N = img.shape
+    result = np.zeros((M, N))
     for i in range(1, M-1):
         for j in range(1, N-1):
             # x direction
@@ -130,10 +131,18 @@ def find_true_edge(img):
             # x = [i - 1, i, i + 1]
             # a, b, c = coefficient(x, y)
             # x_0 = round(-b / (2 * a))
+            if ((y[1] >= y[0]) and (y[1] >= y[2])):
+                result[i, j] = 255
+                y_peak = True
+            else:
+                y_peak = False
 
             # y direction
             x = [img[i, j - 1], img[i, j], img[i, j + 1]]
             # y = [j - 1, j, j + 1]
             # a, b, c = coefficient(x, y)
             # y_0 = round(-b / (2 * a))
+            if y_peak == False:
+                if ((x[1] >= x[0]) and (x[1] >= x[2])):
+                    result[i, j] = 255
     return result
