@@ -48,12 +48,10 @@ eigenfaces_recognizer = cv2.face.EigenFaceRecognizer_create()
 #Train the face recognizer model
 eigenfaces_recognizer.train(detected_faces, np.array(face_labels))
 
-video_capture = cv2.VideoCapture(0)
-# 0 means webcam
+
 # video_capture.set(3, 1920)  # width
 # video_capture.set(4, 1080)  # height
-eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-face_cascade = cv2.CascadeClassifier('Face_Recognition/haarcascade_frontalface_alt2.xml')
+
 width = 250
 height = 300
 dim = (width, height)
@@ -68,6 +66,10 @@ color = {
     5: (0, 0, 255)
 }
 
+video_capture = cv2.VideoCapture(0)
+# 0 means webcam
+eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+face_cascade = cv2.CascadeClassifier('Face_Recognition/haarcascade_frontalface_alt2.xml')
 while True:
     ret, frames = video_capture.read()
     # converted = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
@@ -79,7 +81,7 @@ while True:
         for (x, y, w, h) in faces:
             
             # resize image and convert to grayscale
-            resized = cv2.resize(gray[y:y+w, x:x+h], (250, 300), interpolation=cv2.INTER_AREA)
+            resized = cv2.resize(gray[y:y+h, x:x+w], (250, 300), interpolation=cv2.INTER_AREA)
 
             
             prediction = eigenfaces_recognizer.predict(resized)
@@ -94,12 +96,6 @@ while True:
             # Draw a rectangle around the faces
             rec = cv2.rectangle(frames, (x, y), (x + w, y + h), thecolor, 2)
             cv2.putText(rec, final_label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, thecolor, 2)
-
-    
-    
-
-  
-    
 
     # Display the resulting frame
     cv2.imshow('Video', frames)
