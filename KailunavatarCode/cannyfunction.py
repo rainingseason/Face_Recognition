@@ -126,14 +126,14 @@ def find_true_edge(img):
     for i in range(1, M-1):
         for j in range(1, N-1):
             # x direction
-            x = [img[i - 1, j], img[i, j], img[i + 1, j]]
-            y = [0, 0, 0]
-            a, b, c = coefficient(x, y)
-            x_0 = round(-b / (2 * a))
+            y = [img[i - 1, j], img[i, j], img[i + 1, j]]
+            # x = [i - 1, i, i + 1]
+            # a, b, c = coefficient(x, y)
+            # x_0 = round(-b / (2 * a))
 
             # y direction
             x = [img[i, j - 1], img[i, j], img[i, j + 1]]
-            y = [0, 0, 0]
-            a, b, c = coefficient(x, y)
-            y_0 = round(-b / (2 * a))
+            # y = [j - 1, j, j + 1]
+            # a, b, c = coefficient(x, y)
+            # y_0 = round(-b / (2 * a))
     return result
