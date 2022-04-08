@@ -17,8 +17,6 @@ path = path + '\\Edge Detection\\faces_imgs\\Chessboard.jpeg'
 # path = path + '\\Edge Detection\\faces_imgs\\Chessboard_Reference.png'
 # path = path + '\\Edge Detection\\faces_imgs\\sunset.jpg'
 
-# path = 'C:\\Users\\Alyna Khoo Yi Jie\\Documents\\NTU\\Year 4\\Semester 2\\EE4208 INTELLIGENT SYSTEMS DESIGN\\Assignments\\Face Recognition\\database\\alyna\\alyna_3.jpeg'
-
 img = cv2.imread(path) # BGR
 (dim_x, dim_y) = (img.shape[0], img.shape[1])
 (small_dim_x, small_dim_y) = (dim_x//4, dim_y//4)
@@ -40,7 +38,6 @@ result = cv2.resize(result, (dim_x, dim_y))
 result = cf.find_true_edge(result)
 
 plt.subplot(121)
-# plt.imshow(gray_img, cmap='gray')
 plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 plt.title('Original Image')
 plt.xticks([]), plt.yticks([])
