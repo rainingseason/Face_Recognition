@@ -147,7 +147,7 @@ def subpixel_function(img, D): # 1/4 size image
                     Z[new_i + 1, new_j] = np.round(maxima)
                     Z[new_i - 1, new_j] = np.round(maxima)
                     Z[new_i + 2, new_j] = np.round(maxima)
-                    # Z[new_i - 2, new_j] = np.round(maxima)
+                    # Z[new_i - 2, new_j] = np.round(maxima) # optional, will overwrite one pixel
             # angle 45
             elif (22.5 <= angle[i, j] < 67.5):
                 q = img[i + 1, j - 1]
@@ -171,10 +171,12 @@ def subpixel_function(img, D): # 1/4 size image
 
                     # fill gap
                     Z[new_i, new_j] = pixelvalue
-                    Z[new_i - 2, new_j - 2] = pixelvalue
                     Z[new_i - 1, new_j - 1] = pixelvalue
+                    Z[new_i - 2, new_j - 2] = pixelvalue
+                    Z[new_i - 3, new_j - 3] = pixelvalue
                     Z[new_i + 1, new_j + 1] = pixelvalue
                     Z[new_i + 2, new_j + 2] = pixelvalue
+                    Z[new_i + 3, new_j + 3] = pixelvalue
             # angle 90 vertical
             elif (67.5 <= angle[i, j] < 112.5):
                 q = img[i + 1, j]
@@ -190,10 +192,10 @@ def subpixel_function(img, D): # 1/4 size image
                     new_j = int(4 * j)
                     # fill gap
                     Z[new_i, new_j] = np.round(maxima)
-                    Z[new_i, new_j+1] = np.round(maxima)
-                    Z[new_i, new_j-1] = np.round(maxima)
+                    Z[new_i, new_j + 1] = np.round(maxima)
+                    Z[new_i, new_j - 1] = np.round(maxima)
                     Z[new_i, new_j + 2] = np.round(maxima)
-                    # Z[new_i, new_j - 2] = np.round(maxima)
+                    # Z[new_i, new_j - 2] = np.round(maxima) # optional, will overwrite one pixel
             # angle 135
             elif (112.5 <= angle[i, j] < 157.5):
                 q = img[i - 1, j - 1]
@@ -217,10 +219,12 @@ def subpixel_function(img, D): # 1/4 size image
 
                     # fill gap
                     Z[new_i, new_j] = pixelvalue
-                    Z[new_i + 2, new_j - 2] = pixelvalue
-                    Z[new_i - 1, new_j + 1] = pixelvalue
                     Z[new_i + 1, new_j - 1] = pixelvalue
+                    Z[new_i + 2, new_j - 2] = pixelvalue
+                    Z[new_i + 3, new_j - 3] = pixelvalue
+                    Z[new_i - 1, new_j + 1] = pixelvalue
                     Z[new_i - 2, new_j + 2] = pixelvalue
+                    Z[new_i - 3, new_j + 3] = pixelvalue
             # except IndexError as e:
             #     pass
     return Z
