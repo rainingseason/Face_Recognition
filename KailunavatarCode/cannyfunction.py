@@ -98,28 +98,135 @@ def hysteresis(img, weak, strong=255):
                     pass
     return img
 
-# def coefficient(x,y):
-#     # https://stackoverflow.com/questions/19175037/determine-a-b-c-of-quadratic-equation-using-data-points
-#     x1 = x[0]
-#     x2 = x[1]
-#     x3 = x[2]
-#     y1 = y[0]
-#     y2 = y[1]
-#     y3 = y[2]
-#
-#     a = ((y1 / ((x1 - x2) * (x1 - x3)))
-#         + (y2 / ((x2 - x1) * (x2 - x3)))
-#         + (y3 / ((x3 - x1) * (x3 - x2))))
-#
-#     b = (-y1 * (x2 + x3) / ((x1 - x2) * (x1 - x3))
-#          -y2 * (x1 + x3) / ((x2 - x1) * (x2 - x3))
-#          -y3 * (x1 + x2) / ((x3 - x1) * (x3 - x2)))
-#
-#     c = (y1 * x2 * x3 / ((x1 - x2) * (x1 - x3))
-#         + y2 * x1 * x3 / ((x2 - x1) * (x2 - x3))
-#         + y3 * x1 * x2 / ((x3 - x1) * (x3 - x2)))
-#
-#     return a, b, c
+def coefficient(x, y):
+    # https://stackoverflow.com/questions/19175037/determine-a-b-c-of-quadratic-equation-using-data-points
+    x1 = x[0]
+    x2 = x[1]
+    x3 = x[2]
+    y1 = y[0]
+    y2 = y[1]
+    y3 = y[2]
+    a = ((y1 / ((x1 - x2) * (x1 - x3)))
+        + (y2 / ((x2 - x1) * (x2 - x3)))
+        + (y3 / ((x3 - x1) * (x3 - x2))))
+    b = (-y1 * (x2 + x3) / ((x1 - x2) * (x1 - x3))
+         -y2 * (x1 + x3) / ((x2 - x1) * (x2 - x3))
+         -y3 * (x1 + x2) / ((x3 - x1) * (x3 - x2)))
+    c = (y1 * x2 * x3 / ((x1 - x2) * (x1 - x3))
+        + y2 * x1 * x3 / ((x2 - x1) * (x2 - x3))
+        + y3 * x1 * x2 / ((x3 - x1) * (x3 - x2)))
+
+    quad_eq = np.poly1d([a,b,c])
+    first_dev = np.polyder(quad_eq)
+    slope_zero = first_dev.r
+    maxima = np.polyval(quad_eq, slope_zero)
+    if a != 0:
+        x0 = -b / (2 * a)
+    else:
+        x0 = x[1]
+    return x0, maxima
+
+def subpixel_func(img, D): # 1/4 size image
+    M, N = img.shape
+    Z = np.zeros((M*4, N*4), dtype=np.int32)
+    angle = D * 180. / np.pi
+    angle[angle < 0] += 180
+
+    for i in range(1, M - 1):
+        for j in range(1, N - 1):
+            # angle 0 horizontal
+            if (0 <= angle[i, j] < 22.5) or (157.5 <= angle[i, j] <= 180):
+                q = img[i, j + 1]
+                r = img[i, j - 1]
+                if (img[i, j] > q) and (img[i, j] > r):
+                    # Z[i, j] = img[i, j]
+                    s = img[i, j]
+                    x = [j - 1, j, j + 1]
+                    y = [r, s, q]
+                    x0, maxima = coefficient(x, y)
+                    new_i = int(4 * i)
+                    new_j = int(4 * x0)
+                    # fill gap
+                    Z[new_i, new_j] = np.round(maxima)
+                    Z[new_i + 1, new_j] = np.round(maxima)
+                    Z[new_i - 1, new_j] = np.round(maxima)
+                    Z[new_i + 2, new_j] = np.round(maxima)
+                    # Z[new_i - 2, new_j] = np.round(maxima) # optional, will overwrite one pixel
+            # angle 45
+            elif (22.5 <= angle[i, j] < 67.5):
+                q = img[i + 1, j - 1]
+                r = img[i - 1, j + 1]
+                if (img[i, j] > q) and (img[i, j] > r):
+                    # Z[i, j] = img[i, j]
+                    s = img[i, j]
+                    x = [j - 1, j, j + 1]
+                    y = [r, s, q]
+                    x0_j, maxima_j = coefficient(x, y) # x0 for j direction
+
+                    x = [i - 1, i, i + 1]
+                    y = [r, s, q]
+                    x0_i, maxima_i = coefficient(x, y) # x0 for i direction
+
+                    new_i = int(4 * x0_i)
+                    new_j = int(4 * x0_j)
+                    pixelvalue = np.round(max(maxima_i, maxima_j))
+
+                    # fill gap
+                    Z[new_i, new_j] = pixelvalue
+                    Z[new_i - 1, new_j - 1] = pixelvalue
+                    Z[new_i - 2, new_j - 2] = pixelvalue
+                    Z[new_i - 3, new_j - 3] = pixelvalue
+                    Z[new_i + 1, new_j + 1] = pixelvalue
+                    Z[new_i + 2, new_j + 2] = pixelvalue
+                    Z[new_i + 3, new_j + 3] = pixelvalue
+            # angle 90 vertical
+            elif (67.5 <= angle[i, j] < 112.5):
+                q = img[i + 1, j]
+                r = img[i - 1, j]
+                if (img[i, j] > q) and (img[i, j] > r):
+                    # Z[i, j] = img[i, j]
+                    s = img[i, j]
+                    x = [i - 1, i, i + 1]
+                    y = [r, s, q]
+                    x0, maxima = coefficient(x, y)
+                    new_i = int(4 * x0)
+                    new_j = int(4 * j)
+                    # fill gap
+                    Z[new_i, new_j] = np.round(maxima)
+                    Z[new_i, new_j + 1] = np.round(maxima)
+                    Z[new_i, new_j - 1] = np.round(maxima)
+                    Z[new_i, new_j + 2] = np.round(maxima)
+                    # Z[new_i, new_j - 2] = np.round(maxima) # optional, will overwrite one pixel
+            # angle 135
+            elif (112.5 <= angle[i, j] < 157.5):
+                q = img[i - 1, j - 1]
+                r = img[i + 1, j + 1]
+                if (img[i, j] > q) and (img[i, j] > r):
+                    # Z[i, j] = img[i, j]
+                    s = img[i, j]
+                    x = [j - 1, j, j + 1]
+                    y = [r, s, q]
+                    x0_j, maxima_j = coefficient(x, y) # x0 for j direction
+
+                    x = [i - 1, i, i + 1]
+                    y = [r, s, q]
+                    x0_i, maxima_i = coefficient(x, y) # x0 for i direction
+
+                    new_i = int(4 * x0_i)
+                    new_j = int(4 * x0_j)
+                    pixelvalue = np.round(max(maxima_i, maxima_j))
+
+                    # fill gap
+                    Z[new_i, new_j] = pixelvalue
+                    Z[new_i + 1, new_j - 1] = pixelvalue
+                    Z[new_i + 2, new_j - 2] = pixelvalue
+                    Z[new_i + 3, new_j - 3] = pixelvalue
+                    Z[new_i - 1, new_j + 1] = pixelvalue
+                    Z[new_i - 2, new_j + 2] = pixelvalue
+                    Z[new_i - 3, new_j + 3] = pixelvalue
+            # except IndexError as e:
+            #     pass
+    return Z
 
 def find_true_edge(img):
     M, N = img.shape
