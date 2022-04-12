@@ -2,13 +2,7 @@ import cv2
 from scipy import signal
 from matplotlib import pyplot as plt
 import KailunavatarCode.cannyfunction as cf
-import os
 
-# def toFitMatplotlib(img):
-#     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-#     return img
-
-# path = os.getcwd()
 path = 'C:\\Users\\Alyna Khoo Yi Jie\\Documents\\NTU\\Year 4\\Semester 2\\EE4208 INTELLIGENT SYSTEMS DESIGN\\Assignments\\Face Recognition'
 path = path + '\\KailunavatarCode\\lady1.JPG'
 # path = path + '\\Edge Detection\\faces_imgs\\Chess_board.jpeg'
@@ -42,16 +36,6 @@ def subpixel(gray_img):
     result = cf.subpixel_func(result, theta)
     result, weak, strong = cf.threshold(result)
     result = cf.hysteresis(result, weak)
-
-    # filename = 'small_result.jpg'
-    # cv2.imwrite(filename, result)
-    # result = cv2.imread(filename)
-    # if os.path.exists(filename):
-    #     os.remove(filename)
-
-    # result = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
-    # result = cv2.resize(result, (dim_y, dim_x)) # not sure why need to reverse the dimensions
-    # result = cf.find_true_edge(result)
     return result
 
 norm, img, gray_img = normal(path)
