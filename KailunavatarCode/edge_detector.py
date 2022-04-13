@@ -4,9 +4,9 @@ from matplotlib import pyplot as plt
 import KailunavatarCode.cannyfunction as cf
 
 path = 'C:\\Users\\Alyna Khoo Yi Jie\\Documents\\NTU\\Year 4\\Semester 2\\EE4208 INTELLIGENT SYSTEMS DESIGN\\Assignments\\Face Recognition'
-path = path + '\\KailunavatarCode\\lady1.JPG'
+# path = path + '\\KailunavatarCode\\lady1.JPG'
 # path = path + '\\Edge Detection\\faces_imgs\\Chess_board.jpeg'
-# path = path + '\\Edge Detection\\faces_imgs\\Chessboard.jpeg'
+path = path + '\\Edge Detection\\faces_imgs\\Chessboard.jpeg'
 # path = path + '\\Edge Detection\\faces_imgs\\Chessboard_Reference.png'
 # path = path + '\\Edge Detection\\faces_imgs\\sunset.jpg'
 
@@ -36,22 +36,28 @@ def subpixel(gray_img):
     result = cf.subpixel_func(result, theta)
     result, weak, strong = cf.threshold(result)
     result = cf.hysteresis(result, weak)
-    return result
+    return result, (small_dim_x, small_dim_y)
 
 norm, img, gray_img = normal(path)
-sub = subpixel(gray_img)
+sub, (small_dim_x, small_dim_y) = subpixel(gray_img)
+small_img = cv2.resize(img, (small_dim_x, small_dim_y))
 
-plt.subplot(131)
+plt.subplot(221)
 plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 plt.title('Original Image')
 plt.xticks([]), plt.yticks([])
 
-plt.subplot(132)
+plt.subplot(222)
 plt.imshow(norm, cmap='gray')
 plt.title('Original Edge Detector Result')
 plt.xticks([]), plt.yticks([])
 
-plt.subplot(133)
+plt.subplot(223)
+plt.imshow(cv2.cvtColor(small_img, cv2.COLOR_BGR2RGB), cmap='gray')
+plt.title('Reduced Image')
+plt.xticks([]), plt.yticks([])
+
+plt.subplot(224)
 plt.imshow(sub, cmap='gray')
 plt.title('Subpixel Edge Detector Result')
 plt.xticks([]), plt.yticks([])

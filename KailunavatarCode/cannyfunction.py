@@ -173,12 +173,12 @@ def subpixel_func(img, D): # 1/4 size image
 
                     # fill gap
                     Z[new_i, new_j] = pixelvalue
-                    Z[new_i - 1, new_j - 1] = pixelvalue
-                    Z[new_i - 2, new_j - 2] = pixelvalue
-                    Z[new_i - 3, new_j - 3] = pixelvalue
-                    Z[new_i + 1, new_j + 1] = pixelvalue
-                    Z[new_i + 2, new_j + 2] = pixelvalue
-                    Z[new_i + 3, new_j + 3] = pixelvalue
+                    Z[new_i + 1, new_j - 1] = pixelvalue
+                    Z[new_i + 2, new_j - 2] = pixelvalue
+                    Z[new_i + 3, new_j - 3] = pixelvalue
+                    Z[new_i - 1, new_j + 1] = pixelvalue
+                    Z[new_i - 2, new_j + 2] = pixelvalue
+                    Z[new_i - 3, new_j + 3] = pixelvalue
             # angle 90 vertical
             elif (67.5 <= angle[i, j] < 112.5):
                 q = img[i + 1, j]
@@ -218,12 +218,12 @@ def subpixel_func(img, D): # 1/4 size image
 
                     # fill gap
                     Z[new_i, new_j] = pixelvalue
-                    Z[new_i + 1, new_j - 1] = pixelvalue
-                    Z[new_i + 2, new_j - 2] = pixelvalue
-                    Z[new_i + 3, new_j - 3] = pixelvalue
-                    Z[new_i - 1, new_j + 1] = pixelvalue
-                    Z[new_i - 2, new_j + 2] = pixelvalue
-                    Z[new_i - 3, new_j + 3] = pixelvalue
+                    Z[new_i - 1, new_j - 1] = pixelvalue
+                    Z[new_i - 2, new_j - 2] = pixelvalue
+                    Z[new_i - 3, new_j - 3] = pixelvalue
+                    Z[new_i + 1, new_j + 1] = pixelvalue
+                    Z[new_i + 2, new_j + 2] = pixelvalue
+                    Z[new_i + 3, new_j + 3] = pixelvalue
             # except IndexError as e:
             #     pass
     return Z
