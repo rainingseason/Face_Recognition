@@ -1,22 +1,20 @@
 import cv2
 from scipy import signal
 from matplotlib import pyplot as plt
-import KailunavatarCode.cannyfunction as cf
-import os
+import Canny_Edge_Detector.cannyfunction as cf
 
-def toFitMatplotlib(img):
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    return img
-
-# path = os.getcwd()
 path = 'C:\\Users\\Alyna Khoo Yi Jie\\Documents\\NTU\\Year 4\\Semester 2\\EE4208 INTELLIGENT SYSTEMS DESIGN\\Assignments\\Face Recognition'
-# path = path + '\\KailunavatarCode\\lady1.JPG'
+path = path + '\\Canny_Edge_Detector\\Chessboard_Reference.png'
+# path = path + '\\Canny_Edge_Detector\\lady1.JPG'
 # path = path + '\\Edge Detection\\faces_imgs\\Chess_board.jpeg'
-path = path + '\\Edge Detection\\faces_imgs\\Chessboard.jpeg'
-# path = path + '\\Edge Detection\\faces_imgs\\Chessboard_Reference.png'
+# path = path + '\\Edge Detection\\faces_imgs\\Chessboard.jpeg'
 # path = path + '\\Edge Detection\\faces_imgs\\sunset.jpg'
 
-def ced(gray_img):
+def normal(path):
+    # pre-processing
+    img = cv2.imread(path)  # BGR
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
     gaussian_smooth = signal.convolve2d(gray_img, cf.gaussian_kernel(), boundary='fill', mode='same')
 
     (result, theta) = cf.sobel_filters(gaussian_smooth)
@@ -24,50 +22,43 @@ def ced(gray_img):
     result = cf.non_max_suppression(result, theta)
     result, weak, strong = cf.threshold(result)
     result = cf.hysteresis(result, weak)
-    return result
-
-def normal(path):
-    # pre-processing
-    img = cv2.imread(path)  # BGR
-    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    result = ced(gray_img)
     return result, img, gray_img
 
 def subpixel(gray_img):
     # pre-processing and resizing
-    (dim_x, dim_y) = gray_img.shape
+    (dim_y, dim_x) = gray_img.shape
     (small_dim_x, small_dim_y) = (dim_x // 4, dim_y // 4)
     small_gray_img = cv2.resize(gray_img, (small_dim_x, small_dim_y))
 
-    result = ced(small_gray_img)
+    gaussian_smooth = signal.convolve2d(small_gray_img, cf.gaussian_kernel(), boundary='fill', mode='same')
+    (result, theta) = cf.sobel_filters(gaussian_smooth)
 
-    filename = 'small_result.jpg'
-    cv2.imwrite(filename, result)
-    result = cv2.imread(filename)
-    if os.path.exists(filename):
-        os.remove(filename)
-
-    result = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
-    result = cv2.resize(result, (dim_y, dim_x)) # not sure why need to reverse the dimensions
-    result = cf.find_true_edge(result)
-    return result
+    result = cf.subpixel_func(result, theta)
+    result, weak, strong = cf.threshold(result)
+    result = cf.hysteresis(result, weak)
+    return result, (small_dim_x, small_dim_y)
 
 norm, img, gray_img = normal(path)
-sub = subpixel(gray_img)
+sub, (small_dim_x, small_dim_y) = subpixel(gray_img)
+small_img = cv2.resize(img, (small_dim_x, small_dim_y))
 
-plt.subplot(131)
+plt.subplot(221)
 plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 plt.title('Original Image')
 plt.xticks([]), plt.yticks([])
 
-plt.subplot(132)
+plt.subplot(222)
 plt.imshow(norm, cmap='gray')
-plt.title('Normal Edge Detection')
+plt.title('Original Edge Detector Result')
 plt.xticks([]), plt.yticks([])
 
-plt.subplot(133)
+plt.subplot(223)
+plt.imshow(cv2.cvtColor(small_img, cv2.COLOR_BGR2RGB), cmap='gray')
+plt.title('Reduced Image')
+plt.xticks([]), plt.yticks([])
+
+plt.subplot(224)
 plt.imshow(sub, cmap='gray')
-plt.title('Subpixel Edge Detection')
+plt.title('Subpixel Edge Detector Result')
 plt.xticks([]), plt.yticks([])
 plt.show()
