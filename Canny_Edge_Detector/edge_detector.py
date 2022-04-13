@@ -1,10 +1,10 @@
 import cv2
 from scipy import signal
 from matplotlib import pyplot as plt
-import KailunavatarCode.cannyfunction as cf
+import Canny_Edge_Detector.cannyfunction as cf
 
 path = 'C:\\Users\\Alyna Khoo Yi Jie\\Documents\\NTU\\Year 4\\Semester 2\\EE4208 INTELLIGENT SYSTEMS DESIGN\\Assignments\\Face Recognition'
-# path = path + '\\KailunavatarCode\\lady1.JPG'
+# path = path + '\\Canny_Edge_Detector\\lady1.JPG'
 # path = path + '\\Edge Detection\\faces_imgs\\Chess_board.jpeg'
 path = path + '\\Edge Detection\\faces_imgs\\Chessboard.jpeg'
 # path = path + '\\Edge Detection\\faces_imgs\\Chessboard_Reference.png'
