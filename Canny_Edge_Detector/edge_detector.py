@@ -4,10 +4,10 @@ from matplotlib import pyplot as plt
 import Canny_Edge_Detector.cannyfunction as cf
 
 path = 'C:\\Users\\Alyna Khoo Yi Jie\\Documents\\NTU\\Year 4\\Semester 2\\EE4208 INTELLIGENT SYSTEMS DESIGN\\Assignments\\Face Recognition'
+path = path + '\\Canny_Edge_Detector\\Chessboard_Reference.png'
 # path = path + '\\Canny_Edge_Detector\\lady1.JPG'
 # path = path + '\\Edge Detection\\faces_imgs\\Chess_board.jpeg'
-path = path + '\\Edge Detection\\faces_imgs\\Chessboard.jpeg'
-# path = path + '\\Edge Detection\\faces_imgs\\Chessboard_Reference.png'
+# path = path + '\\Edge Detection\\faces_imgs\\Chessboard.jpeg'
 # path = path + '\\Edge Detection\\faces_imgs\\sunset.jpg'
 
 def normal(path):
