@@ -61,8 +61,8 @@ def non_max_suppression(img, D):
     return Z
 
 
-# def threshold(img, lowThresholdRatio=0.05, highThresholdRatio=0.15):
-def threshold(img, lowThresholdRatio=0.15, highThresholdRatio=0.3):
+def threshold(img, lowThresholdRatio=0.05, highThresholdRatio=0.15):
+# def threshold(img, lowThresholdRatio=0.15, highThresholdRatio=0.3):
     highThreshold = img.max() * highThresholdRatio
     lowThreshold = highThreshold * lowThresholdRatio
 
@@ -151,7 +151,6 @@ def subpixel_func(img, D): # 1/4 size image
                     Z[new_i + 1, new_j] = np.round(maxima)
                     Z[new_i - 1, new_j] = np.round(maxima)
                     Z[new_i + 2, new_j] = np.round(maxima)
-                    # Z[new_i - 2, new_j] = np.round(maxima) # optional, will overwrite one pixel
             # angle 45
             elif (22.5 <= angle[i, j] < 67.5):
                 q = img[i + 1, j - 1]
@@ -196,7 +195,6 @@ def subpixel_func(img, D): # 1/4 size image
                     Z[new_i, new_j + 1] = np.round(maxima)
                     Z[new_i, new_j - 1] = np.round(maxima)
                     Z[new_i, new_j + 2] = np.round(maxima)
-                    # Z[new_i, new_j - 2] = np.round(maxima) # optional, will overwrite one pixel
             # angle 135
             elif (112.5 <= angle[i, j] < 157.5):
                 q = img[i - 1, j - 1]
@@ -224,33 +222,31 @@ def subpixel_func(img, D): # 1/4 size image
                     Z[new_i + 1, new_j + 1] = pixelvalue
                     Z[new_i + 2, new_j + 2] = pixelvalue
                     Z[new_i + 3, new_j + 3] = pixelvalue
-            # except IndexError as e:
-            #     pass
     return Z
 
-def find_true_edge(img):
-    M, N = img.shape
-    result = np.zeros((M, N))
-    for i in range(1, M-1):
-        for j in range(1, N-1):
-            if img[i, j] > 200:
-                # x direction
-                y = [img[i - 1, j], img[i, j], img[i + 1, j]]
-                # x = [i - 1, i, i + 1]
-                # a, b, c = coefficient(x, y)
-                # x_0 = round(-b / (2 * a))
-                if ((y[1] >= y[0]) and (y[1] >= y[2])):
-                    result[i, j] = 255
-                    y_peak = True
-                else:
-                    y_peak = False
-
-                # y direction
-                x = [img[i, j - 1], img[i, j], img[i, j + 1]]
-                # y = [j - 1, j, j + 1]
-                # a, b, c = coefficient(x, y)
-                # y_0 = round(-b / (2 * a))
-                if y_peak == False:
-                    if ((x[1] >= x[0]) and (x[1] >= x[2])):
-                        result[i, j] = 255
-    return result
+# def find_true_edge(img):
+#     M, N = img.shape
+#     result = np.zeros((M, N))
+#     for i in range(1, M-1):
+#         for j in range(1, N-1):
+#             if img[i, j] > 200:
+#                 # x direction
+#                 y = [img[i - 1, j], img[i, j], img[i + 1, j]]
+#                 # x = [i - 1, i, i + 1]
+#                 # a, b, c = coefficient(x, y)
+#                 # x_0 = round(-b / (2 * a))
+#                 if ((y[1] >= y[0]) and (y[1] >= y[2])):
+#                     result[i, j] = 255
+#                     y_peak = True
+#                 else:
+#                     y_peak = False
+#
+#                 # y direction
+#                 x = [img[i, j - 1], img[i, j], img[i, j + 1]]
+#                 # y = [j - 1, j, j + 1]
+#                 # a, b, c = coefficient(x, y)
+#                 # y_0 = round(-b / (2 * a))
+#                 if y_peak == False:
+#                     if ((x[1] >= x[0]) and (x[1] >= x[2])):
+#                         result[i, j] = 255
+#     return result
