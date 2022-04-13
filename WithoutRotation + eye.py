@@ -56,19 +56,50 @@ width = 250
 height = 300
 dim = (width, height)
 
-namelist = ['Adrian', 'Charles', 'Joel', 'JX', 'Michael', 'Truong']
+namelist = ['Truong', 
+            'Charles', 
+            'User1', 
+            'User2', 
+            'User3', 
+            'User4',
+            'User5', 
+            'User6', 
+            'User7', 
+            'User8',
+            'User9', 
+            'User10', 
+            'User11', 
+            'User12',
+            'User13', 
+            'User14', 
+            'User15', 
+            'User16',]
+
 color = {
     0: (238, 238, 0),  
     1: (255, 62, 191), 
     2: (255, 0, 0),  
     3: (255, 0, 255),
     4: (0, 255, 0),
-    5: (0, 0, 255)
-}
+    5: (0, 0, 255),
+    6: (255, 255, 255),
+    7: (255, 255, 255),
+    8: (255, 255, 255),
+    9: (255, 255, 255),
+    10: (255, 255, 255),
+    11: (255, 255, 255),
+    12: (255, 255, 255),
+    13: (255, 255, 255),
+    14: (255, 255, 255),
+    15: (255, 255, 255),
+    16: (255, 255, 255),
+    17: (255, 255, 255),
+    18: (255, 255, 255),
+    19: (255, 255, 255),}
 
 video_capture = cv2.VideoCapture(0)
 # 0 means webcam
-eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascade_eye_tree_eyeglasses.xml')
 face_cascade = cv2.CascadeClassifier('Face_Recognition/haarcascade_frontalface_alt2.xml')
 while True:
     ret, frames = video_capture.read()
