@@ -58,8 +58,8 @@ dim = (width, height)
 
 namelist = ['Truong', 
             'Charles', 
-            'User1', 
-            'User2', 
+            'KaiLun', 
+            'Alyna', 
             'User3', 
             'User4',
             'User5', 
@@ -120,7 +120,7 @@ while True:
             name = namelist[prediction[0]]  # retrieve name from the list based on the prediction index
             final_label = name + ' ' + str(confidence_score) + '%'
             thecolor = color[prediction[0]] if color[prediction[0]] else (255, 255, 255)
-            if(confidence_score < 65):
+            if(confidence_score < 55):
                 final_label = 'Unknown'
                 thecolor = (255, 255, 255)
 
